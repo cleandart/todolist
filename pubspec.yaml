@@ -1,0 +1,9 @@
+name: todolist
+description: A sample web application
+dependencies:
+  browser: any
+  clean_backend:
+    git: git@github.com:cleandart/clean_backend.git
+  js: any
+  react:
+    git: git@github.com:cleandart/react-dart.git
