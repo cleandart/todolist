@@ -2,13 +2,19 @@ library item;
 
 import 'package:react/react.dart';
 
+var itemList = registerComponent(() => new ItemList());
+
 var itemComponent = registerComponent(() => new ItemComponent());
 
 class ItemComponent extends Component {
   get item => props['item'];
   get text => item.ref('text');
   get done => item.ref('done');
+  get addItem => props['add'];
+  get removeItem => props['remove'];
   var _listener;
+
+  ItemComponent();
 
   componentWillMount() {
     _listener = item.onChange.listen((_) => redraw());
@@ -19,39 +25,52 @@ class ItemComponent extends Component {
   }
 
   render() {
-    return div({}, [input({'type': 'checkbox', 'checked': done.value, 'onChange': onBoxChange}),
-                    input({'value': text.value, 'onChange': onTextChange})]);
+    return div({}, [input({'type': 'checkbox', 'checked': done.value,
+                           'onChange': onBoxChange}),
+                    input({'value': text.value, 'onChange': onTextChange,
+                           'onKeyDown': onKeyPress})]);
   }
 
   onTextChange (e) {
     text.value = e.target.value;
-    print(item);
     redraw();
+  }
 
+  onKeyPress (e) {
+    // enter keyCode = 13
+    // backspace keyCode = 9
+    var keyCode = e.nativeEvent.keyCode;
+    if (keyCode == 13) {
+      addItem(1);
+    }
+    else if (keyCode == 8 && text.value == '') {
+      removeItem(item);
+    }
   }
 
   onBoxChange(e) {
     done.value = !done.value;
-    print(item);
+    print(e);
     redraw();
   }
 }
 
-var itemList = registerComponent(() => new ItemList());
-
 class ItemList extends Component {
-  get items => props['items'];
+  get todoList => props['todoList'];
 
   List _renderItems() {
-    return items.map((item) => itemComponent({'item': item})).toList();
+    return todoList.items
+        .map((item) => itemComponent({'item': item,
+                                      'add': todoList.add,
+                                      'remove': todoList.remove}))
+        .toList();
   }
+
   componentWillMount() {
-    items.onChange.listen((_) => redraw());
+    todoList.items.onChange.listen((_) => redraw());
   }
 
   render() {
-    print(items);
     return div({}, _renderItems());
   }
-
 }

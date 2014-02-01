@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:todolist/item.dart';
+import 'package:todolist/todolist.dart';
 
 /**
  * Do not run this using DartEditor Launcher! It will not work due to same
@@ -32,6 +33,7 @@ void main() {
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {
     items = subscriber.subscribe("item").collection;
-    renderComponent(itemList({'items': items}), querySelector('body'));
+    var todoList = new TodoList(items);
+    renderComponent(itemList({'todoList': todoList}), querySelector('body'));
   });
 }
