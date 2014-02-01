@@ -18,6 +18,7 @@ import 'package:todolist/todolist.dart';
 void main() {
   setClientConfiguration();
   Subscription items;
+  Subscription order;
 
   hierarchicalLoggingEnabled = true;
   Logger.root.level = Level.OFF;
@@ -32,9 +33,9 @@ void main() {
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {
     items = subscriber.subscribe("item");
-    items.collection.addIndex(['order']);
-    items.initialSync.then((_) {
-      var todoList = new TodoList(items.collection);
+    order = subscriber.subscribe("order");
+    Subscription.wait([items, order]).then((_){
+      var todoList = new TodoList(items.collection, order.collection);
       renderComponent(itemList({'todoList': todoList}), querySelector('body'));
     });
   });
