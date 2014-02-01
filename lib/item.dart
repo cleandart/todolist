@@ -60,16 +60,13 @@ class ItemComponent extends Component {
 
   drop(ev){
     ev.nativeEvent.preventDefault();
-    print('drop: ${ev.nativeEvent}');
     var id = ev.nativeEvent.dataTransfer.getData("id");
     DataMap other = items.findBy('_id', id).first;
     other['order'] = item['order']-0.1;
-    print('item: $item');
-    print('other: $other');
   }
 
   drag(ev){
-    ev.nativeEvent.dataTransfer.setData("id",item['_id']);
+    ev.nativeEvent.dataTransfer.setData("id", item['_id']);
     print('drag: ${ev.nativeEvent}');
   }
 
