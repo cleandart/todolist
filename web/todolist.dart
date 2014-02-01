@@ -11,22 +11,6 @@ import 'package:logging/logging.dart';
  * http://0.0.0.0:8080/static/simple_example_client.html
  */
 
-LIElement createListElement(person, persons) {
-  LIElement li = new LIElement()
-  ..className = "_id-${person["_id"]}"
-  ..text = "#${person["_id"]} ${person["name"]} (${person["age"]})"
-  ..dataset["_id"] = person["_id"]
-  ..onClick.listen((MouseEvent event) {
-    LIElement e = event.toElement;
-    String _id = e.dataset["_id"];
-    DataMap pers = persons.collection.firstWhere((d) => d["_id"] == _id);
-
-    if (pers != null) {
-      persons.collection.remove(pers);
-    }
-  });
-  return li;
-}
 
 draw(DataSet todos){
   var s=[];
@@ -66,7 +50,6 @@ void main() {
   // initialization of these Subscriptions
   Connection connection = createHttpConnection("http://0.0.0.0:8080/resources/",
       new Duration(milliseconds: 100));
-  print('tututu');
 
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {
