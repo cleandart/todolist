@@ -13,7 +13,6 @@ class ItemComponent extends Component {
   DataMap get item => props['item'];
   get text => item.ref('text');
   get done => item.ref('done');
-  get order => item['order'];
   get addItem => props['add'];
   get removeItem => props['remove'];
   TodoList get todoList => props['todoList'];
@@ -54,7 +53,7 @@ class ItemComponent extends Component {
     // enter keyCode = 13
     var keyCode = e.nativeEvent.keyCode;
     if (keyCode == 13) {
-      todoList.add(order);
+      todoList.add(item);
     }
     // backspace keyCode = 8
     if (keyCode == 8 && text.value == '') {
@@ -78,7 +77,9 @@ class ItemComponent extends Component {
     ev.nativeEvent.preventDefault();
     var id = ev.nativeEvent.dataTransfer.getData("id");
     DataMap other = todoList.items.findBy('_id', id).first;
-    todoList.insert(item['order'], other);
+    num position = todoList.order.indexOf(item['_id']);
+    todoList.order.remove(other['_id']);
+    todoList.insert(position, other);
   }
 
   drag(ev){
@@ -104,7 +105,7 @@ class ItemList extends Component {
 
   List _renderItems() {
     return todoList.sortedItems
-        .map((item) => itemComponent({'item': item,
+        .map((DataMap item) => itemComponent({'item': item,
                                       'todoList': todoList,
                                      }))
         .toList();
@@ -118,6 +119,7 @@ class ItemList extends Component {
 
   componentWillMount() {
     todoList.items.onChange.listen((_) => redraw());
+    todoList.order.onChange.listen((_) => redraw());
   }
 
   render() {

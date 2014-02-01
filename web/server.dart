@@ -30,6 +30,10 @@ void main() {
       return mongodb.collection("item");
     });
 
+    publish('order', (_) {
+      return mongodb.collection("order");
+    });
+
     Backend.bind([], new SHA256()).then((backend) {
       backend.router.addRoute("static", new Route('/static/*'));
       backend.router.addRoute("resources", new Route('/resources/'));
