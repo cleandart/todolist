@@ -23,15 +23,11 @@ void main() {
   });
 
   MongoDatabase mongodb = new MongoDatabase('mongodb://127.0.0.1:27017/clean');
-  mongodb.create_collection('todos');
+  mongodb.create_collection('item');
   Future.wait(mongodb.init).then((_) {
 
-    publish('todos', (_) {
-      return mongodb.collection("todos");
-    });
-
-    publish('completed', (_) {
-      return mongodb.collection("todos").find({"complete" : "t"});
+    publish('item', (_) {
+      return mongodb.collection("item");
     });
 
     Backend.bind([], new SHA256()).then((backend) {

@@ -11,13 +11,13 @@ import 'package:todolist/item.dart';
 /**
  * Do not run this using DartEditor Launcher! It will not work due to same
  * origin policy. What to do: run dartium and follow this link:
- * http://0.0.0.0:8080/static/simple_example_client.html
+ * http://0.0.0.0:8080/static/todolist.html
  */
 
 
 void main() {
   setClientConfiguration();
-  DataSet todos, completed;
+  DataSet items;
 
   hierarchicalLoggingEnabled = true;
   Logger.root.level = Level.OFF;
@@ -31,11 +31,12 @@ void main() {
 
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {
-    todos = subscriber.subscribe("todos").collection;
-    completed = subscriber.subscribe("completed").collection;
-    renderComponent(item({}), querySelector('body'));
-//    render(todos);
-    todos.onChange.listen((_){
+    items = subscriber.subscribe("item").collection;
+    items.add({'text': 'ahoj', 'done': true});
+    items.add({'text': 'cau', 'done': false});
+    renderComponent(itemList({'items': items}), querySelector('body'));
+    items.onChange.listen((_){
+
     });
   });
 }
