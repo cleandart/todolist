@@ -33,6 +33,7 @@ void main() {
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {
     items = subscriber.subscribe("item");
+    items.collection.addIndex(['order']);
     items.initialSync.then((_) {
       var todoList = new TodoList(items.collection);
       renderComponent(itemList({'todoList': todoList}), querySelector('body'));
