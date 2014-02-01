@@ -7,6 +7,5 @@ dependencies:
   clean_sync: any
   js: any
   logging: any
-  react:
-    git: git@github.com:cleandart/react-dart.git
+  react: any
   unittest: any

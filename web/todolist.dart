@@ -4,6 +4,9 @@ import "package:clean_data/clean_data.dart";
 import "package:clean_sync/client.dart";
 import "package:clean_ajax/client_browser.dart";
 import 'package:logging/logging.dart';
+import 'package:react/react.dart';
+import 'package:react/react_client.dart';
+import 'package:todolist/item.dart';
 
 /**
  * Do not run this using DartEditor Launcher! It will not work due to same
@@ -12,33 +15,8 @@ import 'package:logging/logging.dart';
  */
 
 
-draw(DataSet todos){
-  var s=[];
-  s.add("<div> hello world</div>");
-  s.add('<div class = "todolist">');
-  todos.forEach((todo){
-    s.add('<div> ${todo["text"]} </div>');
-  });
-  s.add("</div>");
-  s.add('<input type="button" id="send"> send </input>');
-  s.add('<input type="text" id="text"> </input>');
-  return s.join();
-}
-
-render(DataSet todos){
-  var s = draw(todos);
-  DivElement elem = querySelector('#main');
-  elem.innerHtml = s;
-
-  querySelector('#send').onClick.listen((_) {
-    InputElement text = querySelector("#text");
-    todos.add({'text': text.value, 'completed': 'false'});
-    print('adding ${text.value}');
-  });
-
-}
-
 void main() {
+  setClientConfiguration();
   DataSet todos, completed;
 
   hierarchicalLoggingEnabled = true;
@@ -55,9 +33,9 @@ void main() {
   subscriber.init().then((_) {
     todos = subscriber.subscribe("todos").collection;
     completed = subscriber.subscribe("completed").collection;
-    render(todos);
+    renderComponent(item({}), querySelector('body'));
+//    render(todos);
     todos.onChange.listen((_){
-      render(todos);
     });
   });
 }
