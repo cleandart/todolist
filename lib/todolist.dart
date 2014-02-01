@@ -16,13 +16,12 @@ class TodoList {
     print(items);
   }
 
-  add(position) {
-    print('adding item to position $position');
+  add(order) {
+    print('adding item to position $order');
     var _item = new DataMap.from({'text': '', 'done': false});
   }
 
   remove(item) {
-    print('removing item $item');
     items.remove(item);
   }
 

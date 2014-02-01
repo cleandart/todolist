@@ -13,6 +13,7 @@ class ItemComponent extends Component {
   DataMap get item => props['item'];
   get text => item.ref('text');
   get done => item.ref('done');
+  get order => item['order'];
   get addItem => props['add'];
   get removeItem => props['remove'];
   var _listener;
@@ -34,7 +35,10 @@ class ItemComponent extends Component {
                        'onChange': onBoxChange}),
                 span({'className': 'dnd'}, 'DND'),
                 input({'value': text.value, 'onChange': onTextChange,
-                       'onKeyDown': onKeyPress})]);
+                       'onKeyDown': onKeyPress}),
+                img({'onClick': (_) => removeItem(item),
+                     'src': 'Remove-icon.png',
+                     'vertical-align': 'middle', 'height': 25, 'width': 25})]);
   }
 
   onTextChange (e) {
@@ -47,7 +51,7 @@ class ItemComponent extends Component {
     // backspace keyCode = 9
     var keyCode = e.nativeEvent.keyCode;
     if (keyCode == 13) {
-      addItem(1);
+      addItem(order);
     }
     else if (keyCode == 8 && text.value == '') {
       removeItem(item);
