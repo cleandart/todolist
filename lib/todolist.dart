@@ -8,7 +8,7 @@ createItem({text: '', done: false}) =>
 class TodoList {
   DataSet items;
   DataList order;
-  var focused;
+  DataMap focused;
 
   TodoList(DataSet this.items, DataSet orderSet) {
     if (items.isEmpty) {
@@ -26,18 +26,19 @@ class TodoList {
         order.add(item['_id']);
       }
     }
-    focused = sortedItems.last;
+    focused = new DataMap.from({'focused': sortedItems.last});
   }
 
-  selectNext(item) {
 
-    print('selecting next of $item');
+  selectNext(item) {
+    int i = sortedItems.indexOf(item) + 1;
+    if (i <= sortedItems.length) focused['focused'] = sortedItems[i];
 
   }
 
   selectPrevious(item) {
-    print('selecting previous of $item');
-
+    int i = sortedItems.indexOf(item) - 1;
+    if (i >= 0) focused['focused'] = sortedItems[i];
   }
 
   add(item) {
@@ -45,10 +46,11 @@ class TodoList {
     var _item = createItem();
     items.add(_item);
     insert(_order, _item, after: true);
-    focused = _item;
+    focused['focused'] = _item;
   }
 
   remove(item) {
+    selectPrevious(item);
     items.remove(item);
     order.remove(item['_id']);
   }
@@ -61,15 +63,12 @@ class TodoList {
   }
 
   get sortedItems {
-    print('order: $order');
     List res = [];
     for (String id in order) {
       try{
         res.add(items.findBy('_id', id).first);
       } catch (e){};
     }
-    print('res: $res');
     return res;
   }
-
 }

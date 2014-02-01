@@ -30,9 +30,8 @@ class ItemComponent extends Component {
 
   render() {
     var _input = input({'id': item['_id'], 'value': text.value,
-                        'onChange': onTextChange,
+                        'onChange': onTextChange, 'onFocus': onFocus,
                         'onKeyDown': onKeyPress});
-//    if (todoList.selected == item) _input.getDOMNode().focus();
     return div({'draggable': 'true', 'onDragStart': drag, 'onDrop': drop,
                 'onDragOver': allowDrop},
                [input({'type': 'checkbox', 'checked': done.value,
@@ -92,8 +91,8 @@ class ItemComponent extends Component {
     redraw();
   }
 
-  onFocus() {
-    todoList.focused = item;
+  onFocus(e) {
+    todoList.focused['focused'] = item;
   }
 }
 
@@ -112,7 +111,7 @@ class ItemList extends Component {
   }
 
   componentDidUpdate(_, __, ___) {
-    var idFocused = todoList.focused['_id'];
+    var idFocused = todoList.focused['focused']['_id'];
     var focused = querySelector('#$idFocused');
     if (focused != null) focused.focus();
   }
@@ -120,6 +119,7 @@ class ItemList extends Component {
   componentWillMount() {
     todoList.items.onChange.listen((_) => redraw());
     todoList.order.onChange.listen((_) => redraw());
+    todoList.focused.onChange.listen((_) => redraw());
   }
 
   render() {
