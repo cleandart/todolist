@@ -32,11 +32,6 @@ void main() {
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {
     items = subscriber.subscribe("item").collection;
-    items.add({'text': 'ahoj', 'done': true});
-    items.add({'text': 'cau', 'done': false});
     renderComponent(itemList({'items': items}), querySelector('body'));
-    items.onChange.listen((_){
-
-    });
   });
 }
