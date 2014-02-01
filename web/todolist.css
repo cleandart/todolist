@@ -12,6 +12,12 @@ h1, p {
   color: #333;
 }
 
+.dnd{
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+}
+
 #sample_container_id {
   width: 100%;
   height: 400px;

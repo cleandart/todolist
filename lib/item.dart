@@ -1,13 +1,16 @@
 library item;
 
 import 'package:react/react.dart';
+import 'package:clean_data/clean_data.dart';
+import 'todolist.dart';
 
 var itemList = registerComponent(() => new ItemList());
 
 var itemComponent = registerComponent(() => new ItemComponent());
 
 class ItemComponent extends Component {
-  get item => props['item'];
+  DataSet get items => props['items'];
+  DataMap get item => props['item'];
   get text => item.ref('text');
   get done => item.ref('done');
   get addItem => props['add'];
@@ -25,10 +28,13 @@ class ItemComponent extends Component {
   }
 
   render() {
-    return div({}, [input({'type': 'checkbox', 'checked': done.value,
-                           'onChange': onBoxChange}),
-                    input({'value': text.value, 'onChange': onTextChange,
-                           'onKeyDown': onKeyPress})]);
+    return div({'draggable': 'true', 'onDragStart': drag, 'onDrop': drop,
+                'onDragOver': allowDrop},
+               [input({'type': 'checkbox', 'checked': done.value,
+                       'onChange': onBoxChange}),
+                span({'className': 'dnd'}, 'DND'),
+                input({'value': text.value, 'onChange': onTextChange,
+                       'onKeyDown': onKeyPress})]);
   }
 
   onTextChange (e) {
@@ -48,6 +54,25 @@ class ItemComponent extends Component {
     }
   }
 
+  allowDrop(ev) {
+    ev.nativeEvent.preventDefault();
+  }
+
+  drop(ev){
+    ev.nativeEvent.preventDefault();
+    print('drop: ${ev.nativeEvent}');
+    var id = ev.nativeEvent.dataTransfer.getData("id");
+    DataMap other = items.findBy('_id', id).first;
+    other['order'] = item['order']-0.1;
+    print('item: $item');
+    print('other: $other');
+  }
+
+  drag(ev){
+    ev.nativeEvent.dataTransfer.setData("id",item['_id']);
+    print('drag: ${ev.nativeEvent}');
+  }
+
   onBoxChange(e) {
     done.value = !done.value;
     print(e);
@@ -55,11 +80,14 @@ class ItemComponent extends Component {
   }
 }
 
+
 class ItemList extends Component {
-  get todoList => props['todoList'];
+
+  TodoList get todoList => props['todoList'];
+  var _listener;
 
   List _renderItems() {
-    return todoList.items
+    return todoList.sortedItems
         .map((item) => itemComponent({'item': item,
                                       'add': todoList.add,
                                       'remove': todoList.remove}))
@@ -71,6 +99,7 @@ class ItemList extends Component {
   }
 
   render() {
+    print('rendering intems');
     return div({}, _renderItems());
   }
 }
