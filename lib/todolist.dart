@@ -7,10 +7,13 @@ createItem({text: '', done: false, order: 100}) =>
 
 class TodoList {
   DataSet items;
+  var focused;
+
   TodoList(this.items) {
     if (items.isEmpty) {
       items.add(createItem);
     }
+    focused = sortedItems.last;
 //    int order = 0;
 //    for (DataMap i in items){
 //      if (!i.containsKey('order') || true){
@@ -20,11 +23,21 @@ class TodoList {
 //    }
   }
 
+  selectNext(item) {
+    print('selecting next of $item');
+
+  }
+
+  selectPrevious(item) {
+    print('selecting previous of $item');
+
+  }
+
   add(order) {
-    print('adding item to position $order');
     var _item = createItem();
     items.add(_item);
     insert(order, _item, after: true);
+    focused = _item;
   }
 
   remove(item) {
