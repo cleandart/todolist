@@ -9,13 +9,13 @@ var itemList = registerComponent(() => new ItemList());
 var itemComponent = registerComponent(() => new ItemComponent());
 
 class ItemComponent extends Component {
-  DataSet get items => props['items'];
   DataMap get item => props['item'];
   get text => item.ref('text');
   get done => item.ref('done');
   get order => item['order'];
   get addItem => props['add'];
   get removeItem => props['remove'];
+  TodoList get todoList => props['todoList'];
   var _listener;
 
   ItemComponent();
@@ -36,7 +36,7 @@ class ItemComponent extends Component {
                 span({'className': 'dnd'}, 'DND'),
                 input({'value': text.value, 'onChange': onTextChange,
                        'onKeyDown': onKeyPress}),
-                img({'onClick': (_) => removeItem(item),
+                img({'onClick': (_) => todoList.remove(item),
                      'src': 'Remove-icon.png',
                      'vertical-align': 'middle', 'height': 25, 'width': 25})]);
   }
@@ -51,10 +51,10 @@ class ItemComponent extends Component {
     // backspace keyCode = 9
     var keyCode = e.nativeEvent.keyCode;
     if (keyCode == 13) {
-      addItem(order);
+      todoList.add(order);
     }
     else if (keyCode == 8 && text.value == '') {
-      removeItem(item);
+      todoList.remove(item);
     }
   }
 
@@ -65,8 +65,8 @@ class ItemComponent extends Component {
   drop(ev){
     ev.nativeEvent.preventDefault();
     var id = ev.nativeEvent.dataTransfer.getData("id");
-    DataMap other = items.findBy('_id', id).first;
-    other['order'] = item['order']-0.1;
+    DataMap other = todoList.items.findBy('_id', id).first;
+    todoList.insert(item['order'], other);
   }
 
   drag(ev){
@@ -90,8 +90,8 @@ class ItemList extends Component {
   List _renderItems() {
     return todoList.sortedItems
         .map((item) => itemComponent({'item': item,
-                                      'add': todoList.add,
-                                      'remove': todoList.remove}))
+                                      'todoList': todoList,
+                                      }))
         .toList();
   }
 
