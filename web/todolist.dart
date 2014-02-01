@@ -1,6 +1,5 @@
 import 'dart:html';
 import 'dart:async';
-import "package:clean_data/clean_data.dart";
 import "package:clean_sync/client.dart";
 import "package:clean_ajax/client_browser.dart";
 import 'package:logging/logging.dart';
