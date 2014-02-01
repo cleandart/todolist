@@ -2,8 +2,11 @@ name: todolist
 description: A sample web application
 dependencies:
   browser: any
-  clean_backend:
-    git: git@github.com:cleandart/clean_backend.git
+  clean_backend: any
+  clean_data: '>=0.3.8'
+  clean_sync: any
   js: any
+  logging: any
   react:
     git: git@github.com:cleandart/react-dart.git
+  unittest: any
