@@ -7,8 +7,10 @@ createItem({text: '', done: false}) =>
 
 class TodoList {
   DataSet items;
+  DataSet orderSet;
   DataList order;
-  TodoList(DataSet this.items, DataSet orderSet) {
+
+  TodoList(DataSet this.items, this.orderSet) {
     if (items.isEmpty) {
       items.add(createItem);
     }
