@@ -3,6 +3,7 @@ library item;
 import 'package:react/react.dart';
 import 'package:clean_data/clean_data.dart';
 import 'todolist.dart';
+import 'dart:html';
 
 var itemList = registerComponent(() => new ItemList());
 
@@ -28,13 +29,15 @@ class ItemComponent extends Component {
   }
 
   render() {
+    var _input = input({'id': item['_id'], 'value': text.value,
+                        'onChange': onTextChange, 'onFocus': onFocus,
+                        'onKeyDown': onKeyPress});
     return div({'draggable': 'true', 'onDragStart': drag, 'onDrop': drop,
                 'onDragOver': allowDrop},
                [input({'type': 'checkbox', 'checked': done.value,
                        'onChange': onBoxChange}),
                 span({'className': 'dnd'}, 'DND'),
-                input({'value': text.value, 'onChange': onTextChange,
-                       'onKeyDown': onKeyPress}),
+                _input,
                 img({'onClick': (_) => todoList.remove(item),
                      'src': 'Remove-icon.png',
                      'vertical-align': 'middle', 'height': 25, 'width': 25})]);
@@ -47,13 +50,21 @@ class ItemComponent extends Component {
 
   onKeyPress (e) {
     // enter keyCode = 13
-    // backspace keyCode = 9
     var keyCode = e.nativeEvent.keyCode;
     if (keyCode == 13) {
       todoList.add(item);
     }
-    else if (keyCode == 8 && text.value == '') {
+    // backspace keyCode = 8
+    if (keyCode == 8 && text.value == '') {
       todoList.remove(item);
+    }
+    // arrow down keyCode = 40
+    if (keyCode == 40) {
+      todoList.selectNext(item);
+    }
+    // arrow up keyCode = 38
+    if (keyCode == 38) {
+      todoList.selectPrevious(item);
     }
   }
 
@@ -77,8 +88,11 @@ class ItemComponent extends Component {
 
   onBoxChange(e) {
     done.value = !done.value;
-    print(e);
     redraw();
+  }
+
+  onFocus(e) {
+    todoList.focused['focused'] = item;
   }
 }
 
@@ -92,17 +106,24 @@ class ItemList extends Component {
     return todoList.sortedItems
         .map((DataMap item) => itemComponent({'item': item,
                                       'todoList': todoList,
-                                      }))
+                                     }))
         .toList();
+  }
+
+  componentDidUpdate(_, __, ___) {
+    var idFocused = todoList.focused['focused']['_id'];
+    var focused = querySelector('#$idFocused');
+    if (focused != null) focused.focus();
+    (focused as InputElement).setSelectionRange(focused.value.length, focused.value.length);
   }
 
   componentWillMount() {
     todoList.items.onChange.listen((_) => redraw());
     todoList.order.onChange.listen((_) => redraw());
+    todoList.focused.onChange.listen((_) => redraw());
   }
 
   render() {
-    print('rendering intems');
     return div({}, _renderItems());
   }
 }
