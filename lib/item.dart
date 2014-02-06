@@ -114,6 +114,7 @@ class ItemList extends Component {
     var idFocused = todoList.focused['focused']['_id'];
     var focused = querySelector('#$idFocused');
     if (focused != null) focused.focus();
+    (focused as InputElement).setSelectionRange(focused.value.length, focused.value.length);
   }
 
   componentWillMount() {

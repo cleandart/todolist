@@ -11,14 +11,18 @@ class TodoList {
   DataMap focused;
 
   TodoList(DataSet this.items, DataSet orderSet) {
-    if (items.isEmpty) {
-      items.add(createItem);
-    }
     if (orderSet.isEmpty) {
       order = new DataList();
       orderSet.add({'order': order});
     } else {
       order = orderSet.first['order'];
+    }
+    if (items.isEmpty) {
+      //items.add(createItem);
+      var _order = 0;
+      var _item = createItem();
+      items.add(_item);
+      insert(_order, _item, after: true);
     }
     // order.clear();
     for(DataMap item in items){
@@ -50,6 +54,7 @@ class TodoList {
   }
 
   remove(item) {
+    if (items.length == 1) return;
     selectPrevious(item);
     items.remove(item);
     order.remove(item['_id']);
