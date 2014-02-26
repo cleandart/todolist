@@ -1,6 +1,8 @@
 library todolist;
 
 import "package:clean_data/clean_data.dart";
+import 'dart:html';
+
 
 createItem({text: '', done: false}) =>
     new DataMap.from({'text': text, 'done': done});
@@ -8,7 +10,7 @@ createItem({text: '', done: false}) =>
 class TodoList {
   DataSet items;
   DataList order;
-  DataMap focused;
+  DataReference focused;
 
   TodoList(DataSet this.items, DataSet orderSet) {
     if (orderSet.isEmpty) {
@@ -30,19 +32,21 @@ class TodoList {
         order.add(item['_id']);
       }
     }
-    focused = new DataMap.from({'focused': sortedItems.last});
+    focused = new DataReference(this.items.first['_id']);
   }
+
 
 
   selectNext(item) {
     int i = sortedItems.indexOf(item) + 1;
-    if (i <= sortedItems.length) focused['focused'] = sortedItems[i];
+    print('i: $i');
+    if (i < sortedItems.length) focused.value = sortedItems[i]['_id'];
 
   }
 
   selectPrevious(item) {
     int i = sortedItems.indexOf(item) - 1;
-    if (i >= 0) focused['focused'] = sortedItems[i];
+    if (i >= 0) focused.value = sortedItems[i]['_id'];
   }
 
   add(item) {
@@ -50,12 +54,12 @@ class TodoList {
     var _item = createItem();
     items.add(_item);
     insert(_order, _item, after: true);
-    focused['focused'] = _item;
+    focused.value = _item['_id'];
   }
 
   remove(item) {
     if (items.length == 1) return;
-    selectPrevious(item);
+    if (item['_id'] == focused.value) selectPrevious(item);
     items.remove(item);
     order.remove(item['_id']);
   }

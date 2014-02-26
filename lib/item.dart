@@ -92,7 +92,7 @@ class ItemComponent extends Component {
   }
 
   onFocus(e) {
-    todoList.focused['focused'] = item;
+    todoList.focused.value = item['_id'];
   }
 }
 
@@ -111,10 +111,12 @@ class ItemList extends Component {
   }
 
   componentDidUpdate(_, __, ___) {
-    var idFocused = todoList.focused['focused']['_id'];
+    var idFocused = todoList.focused.value;
     var focused = querySelector('#$idFocused');
-    if (focused != null) focused.focus();
-    (focused as InputElement).setSelectionRange(focused.value.length, focused.value.length);
+    if (focused != null){
+      focused.focus();
+      (focused as InputElement).setSelectionRange(focused.value.length, focused.value.length);
+    }
   }
 
   componentWillMount() {

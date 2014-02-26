@@ -11,7 +11,7 @@ import 'package:todolist/todolist.dart';
 /**
  * Do not run this using DartEditor Launcher! It will not work due to same
  * origin policy. What to do: run dartium and follow this link:
- * http://0.0.0.0:8080/static/todolist.html
+ * http://0.0.0.0:8080/static/index.html
  */
 
 
@@ -22,6 +22,7 @@ void main() {
 
   hierarchicalLoggingEnabled = true;
   Logger.root.level = Level.OFF;
+//  new Logger('clean_sync').level = Level.FINE;
   Logger.root.onRecord.listen((LogRecord rec) {
     print('${rec.message}');
   });
@@ -37,6 +38,9 @@ void main() {
     Subscription.wait([items, order]).then((_){
       var todoList = new TodoList(items.collection, order.collection);
       renderComponent(itemList({'todoList': todoList}), querySelector('body'));
+      new Future.delayed(new Duration(seconds: 5), (){
+        print(document.activeElement.runtimeType);
+      });
     });
   });
 }
