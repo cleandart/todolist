@@ -13,7 +13,7 @@ import 'package:clean_data/clean_data.dart';
 /**
  * Do not run this using DartEditor Launcher! It will not work due to same
  * origin policy. What to do: run dartium and follow this link:
- * http://0.0.0.0:8080/static/index.html
+ * http://127.0.0.1:8080/static/index.html
  */
 
 
@@ -27,7 +27,7 @@ void main() {
   setupDefaultLogHandler();
 
   // initialization of these Subscriptions
-  Connection connection = createHttpConnection("http://0.0.0.0:8080/resources/",
+  Connection connection = createHttpConnection("http://127.0.0.1:8080/resources/",
       new Duration(milliseconds: 200));
 
   Subscriber subscriber = new Subscriber(connection);

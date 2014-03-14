@@ -17,7 +17,7 @@ Installation
 - You must have mongoDB instance running on its standart port 
 - Download the source code
 - Run Dartium
-- Navigate dartium to http://0.0.0.0:8080/static/index.html
+- Navigate dartium to http://127.0.0.1:8080/static/index.html
 - Run server (bin/server.dart) (working directory should be set as default)
 - Refresh Dartium
 

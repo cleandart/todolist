@@ -12,23 +12,7 @@ class TodoListModel {
   DataReference showUncompleted;
 
   TodoListModel(DataSet this.items, DataSet orderSet) {
-      order = orderSet.first['order'];
-//    if (orderSet.isEmpty) {
-//      order = new DataList();
-//      orderSet.add({'order': order});
-//    } else {
-//    }
-//    if (items.isEmpty) {
-//      assert(order.isEmpty);
-//      var item = createItem();
-//      items.add(item);
-//      order.add(item['_id']);
-//    }
-//    for(DataMap item in items){
-//      if (!order.contains(item['_id'])){
-//        order.add(item['_id']);
-//      }
-//    }
+    order = orderSet.first['order'];
     focused = new DataReference(this.items.first['_id']);
     showUncompleted = new DataReference(false);
   }
