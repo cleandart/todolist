@@ -1,77 +1,84 @@
-library todolist;
+library TodoListModel;
 
 import "package:clean_data/clean_data.dart";
-import 'dart:html';
-
 
 createItem({text: '', done: false}) =>
     new DataMap.from({'text': text, 'done': done});
 
-class TodoList {
+class TodoListModel {
   DataSet items;
   DataList order;
   DataReference focused;
+  DataReference showUncompleted;
 
-  TodoList(DataSet this.items, DataSet orderSet) {
-    if (orderSet.isEmpty) {
-      order = new DataList();
-      orderSet.add({'order': order});
-    } else {
+  TodoListModel(DataSet this.items, DataSet orderSet) {
       order = orderSet.first['order'];
-    }
-    if (items.isEmpty) {
-      //items.add(createItem);
-      var _order = 0;
-      var _item = createItem();
-      items.add(_item);
-      insert(_order, _item, after: true);
-    }
-    // order.clear();
-    for(DataMap item in items){
-      if (!order.contains(item['_id'])){
-        order.add(item['_id']);
-      }
-    }
+//    if (orderSet.isEmpty) {
+//      order = new DataList();
+//      orderSet.add({'order': order});
+//    } else {
+//    }
+//    if (items.isEmpty) {
+//      assert(order.isEmpty);
+//      var item = createItem();
+//      items.add(item);
+//      order.add(item['_id']);
+//    }
+//    for(DataMap item in items){
+//      if (!order.contains(item['_id'])){
+//        order.add(item['_id']);
+//      }
+//    }
     focused = new DataReference(this.items.first['_id']);
+    showUncompleted = new DataReference(false);
   }
 
-
-
-  selectNext(item) {
-    int i = sortedItems.indexOf(item) + 1;
-    print('i: $i');
-    if (i < sortedItems.length) focused.value = sortedItems[i]['_id'];
+  /**
+   * set focus to item next to [[item]]
+   */
+  selectNext(DataMap item) {
+    int i = order.indexOf(item['_id']) + 1;
+    if (i < order.length) focused.value = order[i];
 
   }
 
-  selectPrevious(item) {
-    int i = sortedItems.indexOf(item) - 1;
-    if (i >= 0) focused.value = sortedItems[i]['_id'];
+  /**
+   * set focus to item previous to [[item]]
+   */
+  selectPrevious(DataMap item) {
+    int i = order.indexOf(item['_id']) - 1;
+    if (i >= 0) focused.value = order[i];
   }
 
-  add(item) {
-    var _order = order.indexOf(item['_id']);
-    var _item = createItem();
-    items.add(_item);
-    insert(_order, _item, after: true);
-    focused.value = _item['_id'];
+  /**
+   * adds item to the list; the position is either beginning of the list, or after
+   * afterItem, if present.
+   */
+  add(DataMap item, {DataMap afterItem: null}) {
+    var _order;
+    if (afterItem == null) {
+      _order = 0;
+    } else {
+      _order = order.indexOf(afterItem['_id']);
+    }
+    items.add(item);
+    order.insert(_order + 1, item['_id']);
   }
 
-  remove(item) {
+  /**
+   * remove [[item]] from list; handle sellection correctly
+   */
+  remove(DataMap item) {
     if (items.length == 1) return;
     if (item['_id'] == focused.value) selectPrevious(item);
     items.remove(item);
     order.remove(item['_id']);
   }
 
-  insert(num ord, item, {after: false}) {
-    if (after) {
-      ord++;
-    }
-    order.insert(ord, item['_id']);
-  }
-
-  get sortedItems {
+  /**
+   * helper for obtaining items in the given order
+   */
+  List<DataMap> get sortedItems {
     List res = [];
     for (String id in order) {
       try{

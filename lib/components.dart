@@ -5,7 +5,7 @@ import 'package:clean_data/clean_data.dart';
 import 'todolist.dart';
 import 'dart:html';
 
-var itemList = registerComponent(() => new ItemList());
+var itemList = registerComponent(() => new TodoListComponent());
 
 var itemComponent = registerComponent(() => new ItemComponent());
 
@@ -15,7 +15,7 @@ class ItemComponent extends Component {
   get done => item.ref('done');
   get addItem => props['add'];
   get removeItem => props['remove'];
-  TodoList get todoList => props['todoList'];
+  TodoListModel get todoList => props['todoList'];
   var _listener;
 
   ItemComponent();
@@ -29,18 +29,26 @@ class ItemComponent extends Component {
   }
 
   render() {
-    var _input = input({'id': item['_id'], 'value': text.value,
-                        'onChange': onTextChange, 'onFocus': onFocus,
-                        'onKeyDown': onKeyPress});
-    return div({'draggable': 'true', 'onDragStart': drag, 'onDrop': drop,
+    return div({'draggable': 'true',
+                'onDragStart': drag,
+                'onDrop': drop,
                 'onDragOver': allowDrop},
-               [input({'type': 'checkbox', 'checked': done.value,
-                       'onChange': onBoxChange}),
-                span({'className': 'dnd'}, 'DND'),
-                _input,
-                img({'onClick': (_) => todoList.remove(item),
-                     'src': 'Remove-icon.png',
-                     'vertical-align': 'middle', 'height': 25, 'width': 25})]);
+                [
+                   input({'type': 'checkbox',
+                          'checked': done.value,
+                          'onChange': onBoxChange}),
+                   span({'className': 'dnd'}, 'DND'),
+                   input({'id': item['_id'],
+                          'value': text.value,
+                          'onChange': onTextChange,
+                          'onFocus': onFocus,
+                          'onKeyDown': onKeyPress}),
+                   img({'onClick': (_) => todoList.remove(item),
+                        'src': 'Remove-icon.png',
+                        'vertical-align': 'middle',
+                        'height': 25,
+                        'width': 25})
+                ]);
   }
 
   onTextChange (e) {
@@ -52,7 +60,8 @@ class ItemComponent extends Component {
     // enter keyCode = 13
     var keyCode = e.nativeEvent.keyCode;
     if (keyCode == 13) {
-      todoList.add(item);
+      todoList.add(createItem(), afterItem: item);
+      todoList.selectNext(item);
     }
     // backspace keyCode = 8
     if (keyCode == 8 && text.value == '') {
@@ -78,7 +87,7 @@ class ItemComponent extends Component {
     DataMap other = todoList.items.findBy('_id', id).first;
     num position = todoList.order.indexOf(item['_id']);
     todoList.order.remove(other['_id']);
-    todoList.insert(position, other);
+    todoList.order.insert(position, other['_id']);
   }
 
   drag(ev){
@@ -97,17 +106,23 @@ class ItemComponent extends Component {
 }
 
 
-class ItemList extends Component {
+class TodoListComponent extends Component {
 
-  TodoList get todoList => props['todoList'];
+  TodoListModel get todoList => props['todoList'];
   var _listener;
 
   List _renderItems() {
+    shouldVisible(item) => !todoList.showUncompleted.value || !item['done'];
     return todoList.sortedItems
-        .map((DataMap item) => itemComponent({'item': item,
-                                      'todoList': todoList,
-                                     }))
+        .map((DataMap item) => shouldVisible(item) ?
+            itemComponent({'item': item,'todoList': todoList,})
+            : null
+         )
         .toList();
+  }
+
+  List _menu() {
+    return [];
   }
 
   componentDidUpdate(_, __, ___) {
@@ -125,7 +140,22 @@ class ItemList extends Component {
     todoList.focused.onChange.listen((_) => redraw());
   }
 
+  onBoxChange(e) {
+    todoList.showUncompleted.value = !todoList.showUncompleted.value;
+    redraw();
+  }
+
   render() {
-    return div({}, _renderItems());
+    var checkbox = div({}, [
+       label({'htmlFor': 'showUncompleted'}, 'Show uncompleted only'),
+       input({
+        'id': 'showUncompleted',
+        'type': 'checkbox',
+        'checked': todoList.showUncompleted.value,
+        'onChange': onBoxChange}, [])
+    ]);
+    var items = _renderItems();
+    var body = [checkbox]..addAll(items);
+    return div({}, body);
   }
 }
