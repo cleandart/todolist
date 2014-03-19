@@ -1,33 +1,203 @@
+/* Milan Darjanin <milandarjanin.com> */
+/* this css is tested only in Dartium */
+/* this css is for clean sample project written in Dart */
 
-body {
-  background-color: #F8F8F8;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Lobster+Two);
+@font-face {
+  font-family: 'clean-todo';
+  src:url('fonts/clean-todo.eot?jz2izx');
+  src:url('fonts/clean-todo.eot?#iefixjz2izx') format('embedded-opentype'),
+    url('fonts/clean-todo.woff?jz2izx') format('woff'),
+    url('fonts/clean-todo.ttf?jz2izx') format('truetype'),
+    url('fonts/clean-todo.svg?jz2izx#clean-todo') format('svg');
   font-weight: normal;
-  line-height: 1.2em;
-  margin: 15px;
+  font-style: normal;
 }
 
-h1, p {
-  color: #333;
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'clean-todo';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.dnd{
-  width: 100px;
-  height: 100px;
-  background-color: blue;
+.icon-th-small:before {
+  content: "\e605";
+}
+.icon-backspace:before {
+  content: "\e606";
+}
+.icon-tick:before {
+  content: "\e607";
 }
 
-#sample_container_id {
-  width: 100%;
-  height: 400px;
-  position: relative;
-  border: 1px solid #ccc;
-  background-color: #fff;
+
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-#sample_text_id {
-  font-size: 24pt;
-  text-align: center;
-  margin-top: 140px;
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.2em;
+    margin: 15px;
+    color: #333;
+    background-color: #e9eef4;
+}
+
+h1 { color: #444; }
+input {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    color: #333;
+}
+
+.main {
+    position: relative;
+    width: 400px;
+    margin: 30px auto 0 auto;
+}
+
+.title {
+    font-size: 2.5em;
+    text-align: center;
+    text-shadow: 1px 1px white;
+}
+.title i {
+    font-family: 'Lobster Two', cursive;
+    font-weight: normal;
+    color: #00afb5;
+}
+
+.item {
+    position: relative;
+    margin: 10px 0;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 5px;
+    background: -webkit-linear-gradient(top, #fafafa,#f0f0f0);
+    background-color: #fafafa;
+    box-shadow: 0 0 3px 0 rgba(0,0,0,.1), inset 0 1px 0 0 white;
+    overflow: hidden;
+}
+.item.done input[type=text] {
+    text-decoration: line-through;
+    color: #999;
+    text-shadow: none;
+}
+.item .checkbox {
+  display: block;
+  float: left;
+  height: 34px;
+  padding: 7px 0;
+  margin-right: 5px;
+}
+
+.dnd {
+    font-size: 20px;
+    line-height: 20px;
+    display: block;
+    float: left;
+    height: 34px;
+    padding: 7px 0 7px 0;
+    cursor: pointer;
+    color: #ededed;
+    text-shadow: -1px -1px 0 rgba(0,0,0,.25), -1px 0 1px rgba(0,0,0,.15), 1px 1px 0 white;
+}
+
+.input-text {
+    display: block;
+    float: left;
+    width: 300px;
+    height: 34px;
+    padding: 7px 5px;
+    border: none;
+    background: none;
+    text-shadow: 1px 1px white;
+}
+.input-text:focus { outline: none; }
+
+.checkbox {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+.checkbox input[type=checkbox] {
+    position: relative;
+    display: none;
+}
+.checkbox label {
+    display: block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: thin solid #ccc;
+    border-radius: 3px;
+    background: #fafafa;
+    box-shadow: 0 1px white, inset 0 0 3px rgba(0,0,0,.1);
+}
+.checkbox input:checked + label::after {
+    font-family: 'clean-todo';
+    font-size: 30px;
+    line-height: 40px;
+    position: absolute;
+    top: -12px;
+    left: -5px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    content: '';
+    color: #00afb5;
+}
+.icon-backspace {
+    font-size: 30px;
+    line-height: 30px;
+    height: 34px;
+    cursor: pointer;
+    -webkit-transition: color .25s;
+    transition: color .25s;
+    color: #00afb5;
+    text-shadow: 1px 1px white;
+    display: block;
+    position: absolute;
+    right: 8px;
+}
+.icon-backspace:hover { color: #efa734; }
+
+.options {
+  overflow: hidden;
+  padding: 5px 10px;
+}
+.show-uncompleted {
+  float: left;
+}
+.show-uncompleted label{
+  height: 20px;
+  display: block;
+  float: left;
+  padding: 2px 0 4px 0;
+  cursor: pointer;
+}
+.show-uncompleted .checkbox {
+  float: left;
+  display: block;
+  margin-right: 5px;
+}
+.summary {
+  float: right;
+  height: 20px;
+  padding: 2px 0 4px 0;
 }

@@ -33,24 +33,27 @@ class ItemComponent extends Component {
                 'onDragStart': drag,
                 'onDrop': drop,
                 'onDragOver': allowDrop,
-                'className': 'item'},
+                'className': 'item ${done.value ? 'done' : ''}'},
                 [
-                   input({'type': 'checkbox',
+                  div({'className': 'checkbox'},[
+                    input({'type': 'checkbox',
                           'checked': done.value,
                           'onChange': onBoxChange,
-                          'className': 'done'}),
-                   span({'className': 'dnd'}, 'DND'),
-                   input({'id': item['_id'],
-                          'value': text.value,
-                          'onChange': onTextChange,
-                          'onFocus': onFocus,
-                          'onKeyDown': onKeyPress,
-                          'className': 'content'}),
-                   img({'onClick': (_) => todoList.remove(item),
-                        'src': 'Remove-icon.png',
-                        'vertical-align': 'middle',
-                        'height': 25,
-                        'width': 25})
+                          'className': 'done',
+                          'id': 'checkbox-${item['_id']}'}),
+                    label({'htmlFor': 'checkbox-${item['_id']}'})
+                  ]),
+                  div({'className': 'dnd icon-th-small'}),
+                  input({'id': item['_id'],
+                        'value': text.value,
+                        'onChange': onTextChange,
+                        'onFocus': onFocus,
+                        'onKeyDown': onKeyPress,
+                        'type': 'text',
+                        'className': 'input-text'}),
+                  span({'onClick': (_) => todoList.remove(item),
+                      'className': 'icon-backspace'
+                      })
                 ]);
   }
 
@@ -150,16 +153,23 @@ class TodoListComponent extends Component {
 
   render() {
     var checkbox = div({'className': 'show-uncompleted'}, [
-       label({'htmlFor': 'showUncompleted'}, 'Show uncompleted only'),
-       input({
-        'id': 'showUncompleted',
-        'type': 'checkbox',
-        'checked': todoList.showUncompleted.value,
-        'onChange': onBoxChange}, [])
-    ]);
+                    span({'className':'checkbox'},[
+                      input({
+                        'id': 'showUncompleted',
+                        'type': 'checkbox',
+                        'checked': todoList.showUncompleted.value,
+                        'onChange': onBoxChange}),
+                        label({'htmlFor': 'showUncompleted'})
+                      ]),
+                    label({'htmlFor': 'showUncompleted'}, 'Hide completed'),
+                   ]);
     var summary = div({'className': 'summary'}, [
                        '${todoList.numberOfItems} todos, ${todoList.numberOfUnfinished} not finished'
                      ]);
-    return div({}, []..add(checkbox)..addAll( _renderItems())..add(summary));
+    return div({'className': 'main'}, [
+      h1({'className': 'title'},[i({},'clean'),'ToDo']),
+      div({'className': 'options'},[checkbox, summary]),
+      div({'className': 'list'},_renderItems()),
+    ]);
   }
 }
