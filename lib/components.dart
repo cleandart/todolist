@@ -32,17 +32,20 @@ class ItemComponent extends Component {
     return div({'draggable': 'true',
                 'onDragStart': drag,
                 'onDrop': drop,
-                'onDragOver': allowDrop},
+                'onDragOver': allowDrop,
+                'className': 'item'},
                 [
                    input({'type': 'checkbox',
                           'checked': done.value,
-                          'onChange': onBoxChange}),
+                          'onChange': onBoxChange,
+                          'className': 'done'}),
                    span({'className': 'dnd'}, 'DND'),
                    input({'id': item['_id'],
                           'value': text.value,
                           'onChange': onTextChange,
                           'onFocus': onFocus,
-                          'onKeyDown': onKeyPress}),
+                          'onKeyDown': onKeyPress,
+                          'className': 'content'}),
                    img({'onClick': (_) => todoList.remove(item),
                         'src': 'Remove-icon.png',
                         'vertical-align': 'middle',
@@ -146,7 +149,7 @@ class TodoListComponent extends Component {
   }
 
   render() {
-    var checkbox = div({}, [
+    var checkbox = div({'className': 'show-uncompleted'}, [
        label({'htmlFor': 'showUncompleted'}, 'Show uncompleted only'),
        input({
         'id': 'showUncompleted',
@@ -154,8 +157,9 @@ class TodoListComponent extends Component {
         'checked': todoList.showUncompleted.value,
         'onChange': onBoxChange}, [])
     ]);
-    var items = _renderItems();
-    var body = [checkbox]..addAll(items);
-    return div({}, body);
+    var summary = div({'className': 'summary'}, [
+                       '${todoList.numberOfItems} todos, ${todoList.numberOfUnfinished} not finished'
+                     ]);
+    return div({}, []..add(checkbox)..addAll( _renderItems())..add(summary));
   }
 }

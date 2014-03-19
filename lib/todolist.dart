@@ -34,6 +34,10 @@ class TodoListModel {
     if (i >= 0) focused.value = order[i];
   }
 
+  get numberOfItems => order.length;
+
+  get numberOfUnfinished => items.where((e) => e['done'] == false).length;
+
   /**
    * adds item to the list; the position is either beginning of the list, or after
    * afterItem, if present.

@@ -28,7 +28,7 @@ void main() {
 
   // initialization of these Subscriptions
   Connection connection = createHttpConnection("http://127.0.0.1:8080/resources/",
-      new Duration(milliseconds: 200));
+      new Duration(milliseconds: 1000));
 
   Subscriber subscriber = new Subscriber(connection);
   subscriber.init().then((_) {

@@ -17,9 +17,9 @@ void main() {
    */
 
   hierarchicalLoggingEnabled = true;
-  Logger.root.level = Level.OFF;
+  Logger.root.level = Level.WARNING;
   Logger.root.onRecord.listen((LogRecord rec) {
-    print('${rec.message}');
+    print('${rec.loggerName} ${rec.message} ${rec.error} ${rec.stackTrace}');
   });
 
   MongoDatabase mongodb = new MongoDatabase('mongodb://127.0.0.1:27017/clean');
@@ -34,13 +34,17 @@ void main() {
       return mongodb.collection("order");
     });
 
-    Backend.bind('127.0.0.1', 8080, []).then((backend) {
-      backend.router.addRoute("static", new Route('/static/*'));
-      backend.router.addRoute("resources", new Route('/resources/'));
-      MultiRequestHandler requestHandler = new MultiRequestHandler();
-      requestHandler.registerDefaultHandler(handleSyncRequest);
-      backend.addStaticView('static', '../web');
-      backend.addView('resources', requestHandler.handleHttpRequest);
+    runZoned((){
+      Backend.bind('127.0.0.1', 8080, []).then((backend) {
+        backend.router.addRoute("static", new Route('/static/*'));
+        backend.router.addRoute("resources", new Route('/resources/'));
+        MultiRequestHandler requestHandler = new MultiRequestHandler();
+        requestHandler.registerDefaultHandler(handleSyncRequest);
+        backend.addStaticView('static', '../web');
+        backend.addView('resources', requestHandler.handleHttpRequest);
+      });
+    }, onError: (e, s){
+      Logger.root.shout('error', e, s);
     });
   });
 }
