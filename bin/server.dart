@@ -35,7 +35,7 @@ void main() {
     });
 
     runZoned((){
-      Backend.bind('127.0.0.1', 8080, []).then((backend) {
+      Backend.bind('127.0.0.1', 8080, 'top-secret').then((backend) {
         backend.router.addRoute("static", new Route('/static/*'));
         backend.router.addRoute("resources", new Route('/resources/'));
         MultiRequestHandler requestHandler = new MultiRequestHandler();
