@@ -64,8 +64,8 @@ input {
 
 .main {
     position: relative;
-    width: 400px;
-    margin: 30px auto 0 auto;
+    width: 100%;
+    margin: 0 auto 0 auto;
 }
 
 .title {
@@ -81,7 +81,8 @@ input {
 
 .item {
     position: relative;
-    margin: 10px 0;
+    margin: 0 auto 0 auto;
+    width: 400px;
     height: 34px;
     padding: 0 10px;
     border: 1px solid rgba(0,0,0,.15);
@@ -180,6 +181,8 @@ input {
 .options {
   overflow: hidden;
   padding: 5px 10px;
+  width: 400px;
+  margin: 0 auto 0 auto;
 }
 .show-uncompleted {
   float: left;

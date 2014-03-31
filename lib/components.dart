@@ -30,31 +30,34 @@ class ItemComponent extends Component {
 
   render() {
     return div({'draggable': 'true',
-                'onDragStart': drag,
-                'onDrop': drop,
-                'onDragOver': allowDrop,
-                'className': 'item ${done.value ? 'done' : ''}'},
-                [
-                  div({'className': 'checkbox'},[
-                    input({'type': 'checkbox',
-                          'checked': done.value,
-                          'onChange': onBoxChange,
-                          'className': 'done',
-                          'id': 'checkbox-${item['_id']}'}),
-                    label({'htmlFor': 'checkbox-${item['_id']}'})
-                  ]),
-                  div({'className': 'dnd icon-th-small'}),
-                  input({'id': item['_id'],
-                        'value': text.value,
-                        'onChange': onTextChange,
-                        'onFocus': onFocus,
-                        'onKeyDown': onKeyPress,
-                        'type': 'text',
-                        'className': 'input-text'}),
-                  span({'onClick': (_) => todoList.remove(item),
-                      'className': 'icon-backspace'
-                      })
-                ]);
+              'onDragStart': drag,
+              'onDrop': drop,
+              'onDragOver': allowDrop,
+              'style':{'margin':'0px','padding':'5px 0px', 'width':'100%'}},[
+                 div({
+                  'className': 'item ${done.value ? 'done' : ''}'},
+                    [
+                      div({'className': 'checkbox'},[
+                        input({'type': 'checkbox',
+                              'checked': done.value,
+                              'onChange': onBoxChange,
+                              'className': 'done',
+                              'id': 'checkbox-${item['_id']}'}),
+                        label({'htmlFor': 'checkbox-${item['_id']}'})
+                      ]),
+                      div({'className': 'dnd icon-th-small'}),
+                      input({'id': item['_id'],
+                            'value': text.value,
+                            'onChange': onTextChange,
+                            'onFocus': onFocus,
+                            'onKeyDown': onKeyPress,
+                            'type': 'text',
+                            'className': 'input-text'}),
+                      span({'onClick': (_) => todoList.remove(item),
+                          'className': 'icon-backspace'
+                          })
+                    ])
+          ]);
   }
 
   onTextChange (e) {
