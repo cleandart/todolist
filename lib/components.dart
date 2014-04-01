@@ -33,7 +33,7 @@ class ItemComponent extends Component {
               'onDragStart': drag,
               'onDrop': drop,
               'onDragOver': allowDrop,
-              'style':{'margin':'0px','padding':'5px 0px', 'width':'100%'}},[
+              'className': 'wrapper'},[
                  div({
                   'className': 'item ${done.value ? 'done' : ''}'},
                     [

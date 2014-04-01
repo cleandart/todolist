@@ -204,3 +204,8 @@ input {
   height: 20px;
   padding: 2px 0 4px 0;
 }
+.wrapper {
+  padding: 10px 0px 0px 0px;
+  margin: 0px;
+  width: 100%;
+}
