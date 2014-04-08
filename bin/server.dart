@@ -23,7 +23,7 @@ void main() {
   });
 
   MongoDatabase mongodb = new MongoDatabase('mongodb://127.0.0.1:27017/clean');
-  mongodb.create_collection('item');
+//  mongodb.create_collection('item');
   Future.wait(mongodb.init).then((_) {
 
     publish('item', (_) {

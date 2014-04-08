@@ -41,10 +41,7 @@ void main() {
       if (orderCol.isEmpty) {
         DataMap item = createItem();
         itemsCol.add(item);
-        print(item);
         orderCol.add({'order': [item['_id']]});
-        print(itemsCol);
-        print(orderCol);
       }
 
       var todoList = new TodoListModel(items.collection, order.collection);

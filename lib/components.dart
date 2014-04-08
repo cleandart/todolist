@@ -16,17 +16,6 @@ class ItemComponent extends Component {
   get addItem => props['add'];
   get removeItem => props['remove'];
   TodoListModel get todoList => props['todoList'];
-  var _listener;
-
-  ItemComponent();
-
-  componentWillMount() {
-    _listener = item.onChange.listen((_) => redraw());
-  }
-
-  componentWillUnmount() {
-    _listener.cancel();
-  }
 
   render() {
     return div({'draggable': 'true',
@@ -103,7 +92,6 @@ class ItemComponent extends Component {
 
   onBoxChange(e) {
     done.value = !done.value;
-    redraw();
   }
 
   onFocus(e) {
@@ -117,37 +105,29 @@ class TodoListComponent extends Component {
   TodoListModel get todoList => props['todoList'];
   var _listener;
 
-  List _renderItems() {
-    shouldVisible(item) => !todoList.showUncompleted.value || !item['done'];
-    return todoList.sortedItems
-        .map((DataMap item) => shouldVisible(item) ?
-            itemComponent({'item': item,'todoList': todoList,})
-            : null
-         )
-        .toList();
-  }
-
   List _menu() {
     return [];
   }
 
-  componentDidUpdate(_, __, ___) {
+  componentDidUpdate(_, __, ___){
     var idFocused = todoList.focused.value;
     var focused = querySelector('#$idFocused');
     if (focused != null){
       focused.focus();
-      (focused as InputElement).setSelectionRange(focused.value.length, focused.value.length);
     }
   }
+
 
   componentWillMount() {
     todoList.items.onChange.listen((_) => redraw());
     todoList.order.onChange.listen((_) => redraw());
     todoList.focused.onChange.listen((_) => redraw());
+    todoList.showUncompleted.onChange.listen((_) => redraw());
   }
 
   onBoxChange(e) {
     todoList.showUncompleted.value = !todoList.showUncompleted.value;
+    print(todoList.showUncompleted.value);
     redraw();
   }
 
@@ -166,10 +146,18 @@ class TodoListComponent extends Component {
     var summary = div({'className': 'summary'}, [
                        '${todoList.numberOfItems} todos, ${todoList.numberOfUnfinished} not finished'
                      ]);
+
+    shouldVisible(item) => !todoList.showUncompleted.value || !item['done'];
+    var items = todoList.sortedItems
+        .map((DataMap item) => shouldVisible(item) ?
+            itemComponent({'item': item,'todoList': todoList, 'key': item['_id']})
+            : null
+         ).toList();
+
     return div({'className': 'main'}, [
       h1({'className': 'title'},[i({},'clean'),'ToDo']),
-      div({'className': 'options'},[checkbox, summary]),
-      div({'className': 'list'},_renderItems()),
+      div({'className': 'options'}, [checkbox, summary]),
+      div({'className': 'list'}, items),
     ]);
   }
 }
